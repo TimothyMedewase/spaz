@@ -4,9 +4,10 @@ import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import clsx from "clsx";
-import { Buttons } from "../Buttons";
 import { Button } from "./button";
-//import { ModeToggle } from "./toggle";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+
+
 
 export const NavbarUI= ({
   navItems,
@@ -55,7 +56,13 @@ export const NavbarUI= ({
           </Link>
         ))}
       </div>
-      <div ><Button className="py-6 rounded-full bg-[#1ED760] font-bold text-white uppercase transform hover:scale-105 hover:bg-[#21e065] transition-colors duration-200">Login to Spotify</Button></div>
+      <div>
+      <Avatar>
+        <AvatarImage src="https://github.com/shadcn.png" />
+        <AvatarFallback>CN</AvatarFallback>
+      </Avatar>
+        {/* <Button className="py-6 rounded-full bg-[#1ED760] font-bold text-white uppercase transform hover:scale-105 hover:bg-[#21e065] transition-colors duration-200">Login to Spotify</Button> */}
+        </div>
       
       <div className="mr-4 flex justify-end">
         {/* <ModeToggle /> */}
