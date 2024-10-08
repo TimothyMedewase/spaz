@@ -1,9 +1,7 @@
-import React from 'react'
+import React from "react";
 
 const page = () => {
-  return (
-    <div>Tracks page</div>
-  )
-}
+  return <div>Tracks page</div>;
+};
 
-export default page
+export default page;

@@ -1,11 +1,10 @@
-import { Navbar } from "@/components/Navbar";
+import { NavbarLogin } from "@/components/NavbarLogin";
 import React from "react";
 
 const page = () => {
   return (
     <div>
-      <Navbar />
-      Artistes page
+      <NavbarLogin />
     </div>
   );
 };
