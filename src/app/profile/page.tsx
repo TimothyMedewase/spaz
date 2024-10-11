@@ -5,7 +5,7 @@ const page = () => {
   return (
     <div>
       <Navbar />
-      Tracks page
+      Profile page
     </div>
   );
 };
