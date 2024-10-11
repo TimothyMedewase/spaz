@@ -4,7 +4,7 @@ export default function SignIn() {
     <form
       action={async () => {
         "use server";
-        await signIn("spotify");
+        await signIn("spotify", { redirectTo: "/" });
       }}
     >
       <button type="submit">Signin with Spotify</button>
