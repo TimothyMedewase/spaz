@@ -16,6 +16,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useSignOut } from "@/app/hooks/useSignOut";
+import { ModeToggle } from "../mode-toggle";
 
 export const NavbarUI = ({
   navItems,
@@ -65,6 +66,9 @@ export const NavbarUI = ({
               <span className="hidden sm:block text-md">{navItem.name}</span>
             </Link>
           ))}
+        </div>
+        <div className="mr-2">
+          <ModeToggle />
         </div>
         <div>
           <DropdownMenu>
