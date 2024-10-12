@@ -4,7 +4,6 @@ import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import clsx from "clsx";
-import { Button } from "./button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { LogOut, User } from "lucide-react";
 import {
@@ -16,6 +15,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { useSignOut } from "@/app/hooks/useSignOut";
 
 export const NavbarUI = ({
   navItems,
@@ -29,6 +29,7 @@ export const NavbarUI = ({
   className?: string;
 }) => {
   const pathname = usePathname();
+  const signOut = useSignOut();
   return (
     <div>
       <div className=" border-b relative flex items-center justify-between">
@@ -86,7 +87,7 @@ export const NavbarUI = ({
               </DropdownMenuGroup>
               <DropdownMenuSeparator />
 
-              <DropdownMenuItem>
+              <DropdownMenuItem onClick={signOut}>
                 <LogOut className="mr-2 h-4 w-4" />
                 <span>Log out</span>
               </DropdownMenuItem>
