@@ -2,6 +2,7 @@ import { Navbar } from "@/components/Navbar";
 import React from "react";
 import Filter from "@/components/ui/tracksFilter";
 import ArtistesPage from "@/components/artistes/ArtistesPage";
+import Footer from "@/components/Footer";
 
 const page = () => {
   return (
@@ -12,6 +13,7 @@ const page = () => {
         <div className="mt-12"></div>
         <ArtistesPage />
       </div>
+      <Footer />
     </div>
   );
 };

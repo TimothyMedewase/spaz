@@ -1,5 +1,6 @@
 import React from "react";
 import { Navbar } from "@/components/Navbar";
+import Footer from "@/components/Footer";
 
 const page = () => {
   return (
@@ -10,6 +11,7 @@ const page = () => {
           Profile page
         </h1>
       </div>
+      <Footer />
     </div>
   );
 };
