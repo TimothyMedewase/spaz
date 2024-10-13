@@ -4,10 +4,10 @@ export default function Home() {
   return (
     <div>
       <Navbar />
-      <div className="mt-12 mx-12">
-        <span className=" flex justify-center border-2 text-3xl font-bold">
+      <div className="mt-5 mx-12">
+        <h1 className=" flex justify-center text-3xl font-bold p-4">
           Home page
-        </span>
+        </h1>
       </div>
     </div>
   );
