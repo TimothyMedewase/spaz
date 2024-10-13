@@ -9,9 +9,10 @@ type TimePeriod = "4 weeks" | "6 months" | "12 months";
 const pageNames: { [key: string]: string } = {
   "/tracks": "Tracks",
   "/artistes": "Artistes",
+  "/genres": "Genres",
 };
 
-export default function TopTracksFilter() {
+export default function Filter() {
   const [selectedPeriod, setSelectedPeriod] = useState<TimePeriod>("4 weeks");
   const pathname = usePathname();
 
