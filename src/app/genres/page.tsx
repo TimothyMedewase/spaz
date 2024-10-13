@@ -2,6 +2,7 @@ import { Navbar } from "@/components/Navbar";
 import React from "react";
 import Filter from "@/components/ui/tracksFilter";
 import { Charts } from "@/components/genres/Charts";
+import Footer from "@/components/Footer";
 
 const page = () => {
   return (
@@ -15,6 +16,7 @@ const page = () => {
           <Charts />
         </div>
       </div>
+      <Footer />
     </div>
   );
 };

@@ -2,6 +2,7 @@ import React from "react";
 import { Navbar } from "@/components/Navbar";
 import Filter from "@/components/ui/tracksFilter";
 import TracksPage from "@/components/tracks/TracksPage";
+import Footer from "@/components/Footer";
 
 const page = () => {
   return (
@@ -13,6 +14,7 @@ const page = () => {
           <TracksPage />
         </div>
       </div>
+      <Footer />
     </div>
   );
 };

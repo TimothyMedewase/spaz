@@ -1,6 +1,7 @@
 import React from "react";
 import { Navbar } from "@/components/Navbar";
 import RecentlyPlayed from "@/components/recently-played/RecentlyPlayed";
+import Footer from "@/components/Footer";
 
 const page = () => {
   return (
@@ -14,6 +15,7 @@ const page = () => {
           <RecentlyPlayed />
         </div>
       </div>
+      <Footer />
     </div>
   );
 };
