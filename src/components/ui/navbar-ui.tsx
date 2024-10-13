@@ -42,7 +42,7 @@ export const NavbarUI = ({
         </Link>
         <div
           className={cn(
-            " flex max-w-full relative mx-auto pr-8 pl-8 py-4 items-center justify-center space-x-12 ",
+            " flex max-w-full relative mx-auto pr-8 pl-8 py-4 items-center justify-center space-x-8 ",
             className
           )}
         >
