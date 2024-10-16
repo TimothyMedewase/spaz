@@ -32,7 +32,7 @@ export default function Footer() {
               </li>
               <li>
                 <Link
-                  href="/about"
+                  href="/tracks"
                   className="text-sm hover:text-gray-600 transition-colors"
                 >
                   Tracks
@@ -40,7 +40,7 @@ export default function Footer() {
               </li>
               <li>
                 <Link
-                  href="/careers"
+                  href="/artistes"
                   className="text-sm hover:text-gray-600 transition-colors"
                 >
                   Artistes
@@ -48,7 +48,7 @@ export default function Footer() {
               </li>
               <li>
                 <Link
-                  href="/press"
+                  href="/genres"
                   className="text-sm hover:text-gray-600 transition-colors"
                 >
                   Genres
@@ -56,7 +56,7 @@ export default function Footer() {
               </li>
               <li>
                 <Link
-                  href="/partners"
+                  href="/recently-played"
                   className="text-sm hover:text-gray-600 transition-colors"
                 >
                   Recently Played
@@ -69,7 +69,7 @@ export default function Footer() {
             <ul className="space-y-2">
               <li>
                 <Link
-                  href="/products"
+                  href="/privacy-policy"
                   className="text-sm hover:text-gray-600 transition-colors"
                 >
                   Privacy policy
