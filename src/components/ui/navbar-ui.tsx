@@ -4,6 +4,7 @@ import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import clsx from "clsx";
+import { UserButton } from "@clerk/nextjs";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { LogOut, User } from "lucide-react";
 import {
@@ -15,7 +16,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { useSignOut } from "@/app/hooks/useSignOut";
+
 import { ModeToggle } from "../mode-toggle";
 
 export const NavbarUI = ({
@@ -30,7 +31,7 @@ export const NavbarUI = ({
   className?: string;
 }) => {
   const pathname = usePathname();
-  const signOut = useSignOut();
+
   return (
     <div>
       <div className=" border-b relative flex items-center justify-between">
@@ -67,41 +68,12 @@ export const NavbarUI = ({
             </Link>
           ))}
         </div>
-        <div className="mr-2">
+        <div className="mr-2 ">
           <ModeToggle />
         </div>
-        <div>
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Avatar>
-                <AvatarImage src="https://github.com/shadcn.png" />
-                <AvatarFallback>
-                  <User />
-                </AvatarFallback>
-              </Avatar>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent className="w-56">
-              <DropdownMenuLabel>My Account</DropdownMenuLabel>
-              <DropdownMenuSeparator />
-              <DropdownMenuGroup>
-                <DropdownMenuItem>
-                  <User className="mr-2 h-4 w-4" />
-                  <span>
-                    <Link href="/profile">Profile</Link>
-                  </span>
-                </DropdownMenuItem>
-              </DropdownMenuGroup>
-              <DropdownMenuSeparator />
-
-              <DropdownMenuItem onClick={signOut}>
-                <LogOut className="mr-2 h-4 w-4" />
-                <span>Log out</span>
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+        <div className="mr-2 size-auto flex justify-end">
+          <UserButton />
         </div>
-
-        <div className="mr-4 flex justify-end">{/* <ModeToggle /> */}</div>
       </div>
     </div>
   );
