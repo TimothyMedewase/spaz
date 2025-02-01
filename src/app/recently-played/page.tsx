@@ -1,9 +1,12 @@
 import React from "react";
 import { Navbar } from "@/components/Navbar";
-import RecentlyPlayed from "@/components/recently-played/RecentlyPlayed";
+import { columns } from "./columns";
+import getRecentlyPlayed from "../actions/get-recently-played";
 import Footer from "@/components/Footer";
+import { DataTable } from "@/components/data-table";
 
-const page = () => {
+const RecentlyPlayedPage = async () => {
+  const data = await getRecentlyPlayed();
   return (
     <div>
       <Navbar />
@@ -12,7 +15,9 @@ const page = () => {
           Recently played page
         </h1>
         <div>
-          <RecentlyPlayed />
+          <div className="container mx-auto py-10">
+            <DataTable columns={columns} data={data} />
+          </div>
         </div>
       </div>
       <Footer />
@@ -20,4 +25,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default RecentlyPlayedPage;

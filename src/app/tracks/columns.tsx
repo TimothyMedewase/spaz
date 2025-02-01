@@ -1,18 +1,9 @@
 "use client";
 
 import { ColumnDef } from "@tanstack/react-table";
-import { ReactElement } from "react";
+import { TopTracks } from "../types";
 
-// This type is used to define the shape of our data.
-// You can use a Zod schema here if you want.
-export type Tracks = {
-  rank: number;
-  img: string;
-  track: string;
-  artistes: string;
-};
-
-export const columns: ColumnDef<Tracks>[] = [
+export const columns: ColumnDef<TopTracks>[] = [
   {
     accessorKey: "rank",
     header: "Rank",
