@@ -2,7 +2,7 @@ import React from "react";
 import { Navbar } from "@/components/Navbar";
 import Footer from "@/components/Footer";
 
-const page = () => {
+const ProfilePage = () => {
   return (
     <div>
       <Navbar />
@@ -16,4 +16,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default ProfilePage;

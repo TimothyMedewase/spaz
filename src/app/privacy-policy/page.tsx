@@ -2,13 +2,13 @@ import React from "react";
 import { Navbar } from "@/components/Navbar";
 import Footer from "@/components/Footer";
 
-const page = () => {
+const PrivacyPolicypage = () => {
   return (
     <div>
       <Navbar />
       <div className="mt-5 mx-12">
         <h1 className=" flex justify-center text-3xl font-bold p-4">
-          Privacy Policy page
+          Privacy Policy
         </h1>
       </div>
       <Footer />
@@ -16,4 +16,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default PrivacyPolicypage;

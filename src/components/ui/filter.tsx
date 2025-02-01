@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { usePathname } from "next/navigation";
 
@@ -12,11 +11,15 @@ const pageNames: { [key: string]: string } = {
   "/genres": "Genres",
 };
 
-export default function Filter() {
-  const [selectedPeriod, setSelectedPeriod] = useState<TimePeriod>("4 weeks");
+interface FilterProps {
+  selectedPeriod: string;
+  onPeriodChange: (period: TimePeriod) => void;
+}
+
+export function Filter({ selectedPeriod, onPeriodChange }: FilterProps) {
   const pathname = usePathname();
 
-  const pageName = pageNames[pathname] || "Items"; // Fallback to "Items" if pathname is not found
+  const pageName = pageNames[pathname] || "Items";
 
   const periods: TimePeriod[] = ["4 weeks", "6 months", "12 months"];
 
@@ -31,7 +34,7 @@ export default function Filter() {
             {periods.map((period) => (
               <button
                 key={period}
-                onClick={() => setSelectedPeriod(period)}
+                onClick={() => onPeriodChange(period)}
                 className={`py-2 px-4 text-sm font-medium transition-colors ${
                   selectedPeriod === period
                     ? "bg-primary text-primary-foreground"

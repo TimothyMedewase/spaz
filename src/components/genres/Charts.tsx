@@ -2,21 +2,13 @@
 
 import { Bar, BarChart, XAxis, YAxis } from "recharts";
 
+import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import {
-  ChartConfig,
+  type ChartConfig,
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
-
-export const description = "A mixed bar chart";
 
 const chartData = [
   { browser: "chrome", visitors: 275, fill: "var(--color-chrome)" },
@@ -52,9 +44,13 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
-export function Charts() {
+interface ChartsProps {
+  selectedPeriod: string;
+}
+
+export function Charts({ selectedPeriod }: ChartsProps) {
   return (
-    <Card className="mb-8  ">
+    <Card className="mb-8">
       <CardContent>
         <ChartContainer config={chartConfig}>
           <BarChart
@@ -70,7 +66,7 @@ export function Charts() {
               dataKey="browser"
               type="category"
               tickLine={false}
-              tickMargin={5} // Reduced tick margin to decrease spacing between items
+              tickMargin={5}
               axisLine={false}
               tickFormatter={(value) =>
                 chartConfig[value as keyof typeof chartConfig]?.label
@@ -81,13 +77,18 @@ export function Charts() {
               cursor={false}
               content={<ChartTooltipContent hideLabel />}
             />
-            <Bar dataKey="visitors" layout="vertical" radius={5} />
+            <Bar
+              barSize={40}
+              dataKey="visitors"
+              layout="vertical"
+              radius={15}
+            />
           </BarChart>
         </ChartContainer>
       </CardContent>
       <CardFooter className="flex-col items-start gap-2 text-sm">
         <div className="leading-none text-muted-foreground">
-          Showing data for the last "##timePeriod"
+          Showing data for the last {selectedPeriod}
         </div>
       </CardFooter>
     </Card>

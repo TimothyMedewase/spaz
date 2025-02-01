@@ -1,6 +1,6 @@
-import ImageGrid from "./ImageGrid";
+import ImageGrid from "../../components/artistes/ImageGrid";
 
-export default function ArtistesPage() {
+export default function ArtistesData() {
   const images = [
     { src: "/api/placeholder/400/320", alt: "Image 1" },
     { src: "/api/placeholder/400/320", alt: "Image 2" },
