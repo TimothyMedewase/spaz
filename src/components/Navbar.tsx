@@ -21,8 +21,8 @@ export function Navbar() {
       link: "/genres",
     },
     {
-      name: "Recently Played",
-      link: "/recently-played",
+      name: "Recents",
+      link: "/recents",
     },
   ];
   return (

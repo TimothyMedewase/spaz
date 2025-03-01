@@ -21,24 +21,40 @@ export interface SpotifyResponse {
   };
 }
 
-export interface RecentlyPlayed {
-  img: string;
-  track: string;
-  artistes: string;
-  playedAt: string;
+export interface Recents {
+  items: {
+    track: {
+      name: string;
+      artists: {
+        name: string;
+      };
+    };
+    played_at: string;
+  };
 }
 
 export type TopTracks = {
-  rank: number;
-  img: string;
-  track: string;
-  artistes: string;
+  items: {
+    TrackObject: {
+      artistes: {
+        name: string;
+      }[];
+      name: string;
+    };
+  }[];
 };
 
 export type TopArtistes = {
-  rank: number;
-  img: string;
-  name: string;
+  items: {
+    ArtistObject: {
+      images: {
+        url: string;
+        height: number;
+        width: number;
+      };
+      name: string;
+    };
+  }[];
 };
 
 export type TopGenres = {

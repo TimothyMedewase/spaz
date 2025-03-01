@@ -1,9 +1,9 @@
 "use client";
 
 import { ColumnDef } from "@tanstack/react-table";
-import { RecentlyPlayed } from "../types";
+import { Recents } from "../types";
 
-export const columns: ColumnDef<RecentlyPlayed>[] = [
+export const columns: ColumnDef<Recents>[] = [
   {
     accessorKey: "img",
     header: "",

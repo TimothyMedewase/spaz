@@ -71,7 +71,7 @@ export const NavbarUI = ({
         <div className="mr-4">
           <ModeToggle />
         </div>
-        <div className="mr-2 size-auto flex justify-end">
+        <div className="mr-2 size-auto flex">
           <UserButton />
         </div>
       </div>
