@@ -24,11 +24,14 @@ const ArtistesPage = () => {
     <div>
       <Navbar />
       <div className="mt-5 mx-12">
+        <h1 className=" flex justify-center text-3xl font-bold p-4">
+          Top Artistes ({selectedPeriod})
+        </h1>
         <Filter
           selectedPeriod={selectedPeriod}
           onPeriodChange={setSelectedPeriod}
         />
-        <div className="mt-12 mb-5">
+        <div className="container mx-auto py-10">
           <ArtistesData />
         </div>
       </div>

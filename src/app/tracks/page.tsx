@@ -6,7 +6,6 @@ import { Filter } from "@/components/ui/filter";
 import Footer from "@/components/Footer";
 import { DataTable } from "@/components/data-table";
 import { columns } from "./columns";
-import getTopTracks from "../actions/get-top-tracks";
 
 type TimePeriod = "4 weeks" | "6 months" | "12 months";
 
@@ -16,8 +15,9 @@ const TracksPage = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const tracks = await getTopTracks();
-      //setData();
+      //const tracks = await getTopTracks();
+      //console.log(tracks);
+      //setData(tracks);
     };
 
     fetchData();
@@ -27,11 +27,14 @@ const TracksPage = () => {
     <div>
       <Navbar />
       <div className="mt-5 mx-12">
+        <h1 className=" flex justify-center text-3xl font-bold p-4">
+          Top Tracks ({selectedPeriod})
+        </h1>
         <Filter
           selectedPeriod={selectedPeriod}
           onPeriodChange={setSelectedPeriod}
         />
-        <div className="mt-12 mb-5">
+        <div className="container mx-auto py-10">
           <DataTable columns={columns} data={data} />
         </div>
       </div>
