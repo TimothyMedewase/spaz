@@ -21,7 +21,7 @@ export interface SpotifyResponse {
   };
 }
 
-export interface Recents {
+export interface RecentsResponse {
   items: {
     track: {
       name: string;
