@@ -4,8 +4,9 @@ import { NextResponse } from "next/server";
 export async function GET() {
   // Get Spotify token directly from cookie
   const cookieStore = await cookies();
-  //console.log(cookieStore);
-  const accessToken = cookieStore.get("spotify_access_token");
+
+  const accessToken = cookieStore.get("spotify_access_token")?.value;
+  console.log(accessToken);
 
   if (!accessToken) {
     return NextResponse.json(
@@ -45,8 +46,9 @@ export async function GET() {
     }
 
     const data = await response.json();
-    console.log(data);
-    return NextResponse.json(data);
+    console.log(data.items);
+    return NextResponse.json(data.items);
+    //return NextResponse.json(data.items[0].track.artists[0].name);
   } catch (error) {
     console.error("Error fetching recent tracks:", error);
     return NextResponse.json(
