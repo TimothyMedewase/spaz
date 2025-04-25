@@ -5,18 +5,6 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import clsx from "clsx";
 import { UserButton } from "@clerk/nextjs";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { LogOut, User } from "lucide-react";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuGroup,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-
 import { ModeToggle } from "../mode-toggle";
 
 export const NavbarUI = ({
@@ -72,7 +60,14 @@ export const NavbarUI = ({
           <ModeToggle />
         </div>
         <div className="mr-2 size-auto flex">
-          <UserButton />
+          <UserButton
+          // userProfileProps={{
+          //   additionalOAuthScopes: {
+          //     google: ["foo", "bar"],
+          //     github: ["qux"],
+          //   },
+          // }}
+          />
         </div>
       </div>
     </div>

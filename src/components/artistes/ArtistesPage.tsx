@@ -2,12 +2,12 @@ import ImageGrid from "./ImageGrid";
 
 export default function ArtistesPage() {
   const images = [
-    { src: "/api/placeholder/400/320", alt: "Image 1" },
-    { src: "/api/placeholder/400/320", alt: "Image 2" },
-    { src: "/api/placeholder/400/320", alt: "Image 3" },
-    { src: "/api/placeholder/400/320", alt: "Image 4" },
-    { src: "/api/placeholder/400/320", alt: "Image 5" },
-    { src: "/api/placeholder/400/320", alt: "Image 6" },
+    { artisteUrl: "/api/placeholder/400/320", artisteName: "Image 1" },
+    { artisteUrl: "/api/placeholder/400/320", artisteName: "Image 2" },
+    { artisteUrl: "/api/placeholder/400/320", artisteName: "Image 3" },
+    { artisteUrl: "/api/placeholder/400/320", artisteName: "Image 4" },
+    { artisteUrl: "/api/placeholder/400/320", artisteName: "Image 5" },
+    { artisteUrl: "/api/placeholder/400/320", artisteName: "Image 6" },
     // Add more images as needed
   ];
 

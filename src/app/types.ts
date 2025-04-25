@@ -26,37 +26,47 @@ export interface RecentsResponse {
     track: {
       name: string;
       artists: {
-        name: string;
-      };
-    };
-    played_at: string;
-  };
-}
-
-export type TopTracks = {
-  items: {
-    TrackObject: {
-      artistes: {
+        id: string;
         name: string;
       }[];
+    };
+    played_at: string;
+  }[];
+}
+
+export type TopTracksResponse = {
+  items: {
+    artists: {
+      id: string;
       name: string;
+    }[];
+    name: string;
+    album: {
+      images: {
+        0: {
+          url: string;
+        };
+      };
     };
   }[];
 };
 
-export type TopArtistes = {
+export type TopArtistesResponse = {
   items: {
-    ArtistObject: {
-      images: {
+    images: {
+      0: {
         url: string;
-        height: number;
-        width: number;
+        // height: number;
+        // width: number;
       };
-      name: string;
     };
+    name: string;
   }[];
 };
 
 export type TopGenres = {
-  genre: string;
+  items: {
+    genres: string;
+    count: number;
+  };
 };
