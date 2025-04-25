@@ -63,7 +63,7 @@ export const columns: ColumnDef<TopTracks>[] = [
   },
   {
     accessorKey: "artistNames",
-    header: "Artists",
+    header: "Artistes",
     cell: ({ row }) => {
       // Join artist names with commas
       return row.original.artistNames.join(", ");

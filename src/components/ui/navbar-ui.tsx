@@ -4,7 +4,7 @@ import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import clsx from "clsx";
-import { UserButton } from "@clerk/nextjs";
+import { UserButton, useClerk } from "@clerk/nextjs";
 import { ModeToggle } from "../mode-toggle";
 
 export const NavbarUI = ({
@@ -21,6 +21,17 @@ export const NavbarUI = ({
   const pathname = usePathname();
   // Add state to track if component is mounted (client-side only)
   const [mounted, setMounted] = useState(false);
+  const { signOut } = useClerk();
+
+  // Custom sign out handler that clears cookies before signing out
+  const handleSignOut = async () => {
+    // Delete the Spotify token cookie
+    document.cookie =
+      "spotify_access_token=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT; Secure; SameSite=Lax";
+
+    // Then sign out with Clerk
+    await signOut();
+  };
 
   // Use effect to set mounted to true when component is mounted on client
   useEffect(() => {
@@ -86,7 +97,7 @@ export const NavbarUI = ({
           <ModeToggle />
         </div>
         <div className="mr-2 size-auto flex">
-          <UserButton />
+          <UserButton afterSignOutUrl="/" signOutCallback={handleSignOut} />
         </div>
       </div>
     </div>

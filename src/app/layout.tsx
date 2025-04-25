@@ -22,7 +22,7 @@ export const metadata: Metadata = {
   description:
     "An application that provides users insights into their Spotify listening patterns.",
   icons: {
-    icon: "/favicon.ico",
+    icon: "/icon.ico",
   },
 };
 
