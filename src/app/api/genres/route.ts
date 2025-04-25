@@ -1,6 +1,7 @@
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
+import { TopGenres } from "@/app/types";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -176,7 +177,7 @@ async function fetchGenresData(accessToken: string, timeRange: string) {
         .sort((a, b) => b.count - a.count);
 
       // Limit to top 20 genres for visualization purposes
-      const topGenres = sortedGenres.slice(0, 10);
+      const topGenres = sortedGenres.slice(0, 20);
 
       const formattedResponse = NextResponse.json(topGenres);
       formattedResponse.headers.set("Cache-Control", "no-store, max-age=0");

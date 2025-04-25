@@ -97,6 +97,12 @@ async function fetchFormattedRecentTracks(accessToken: string) {
       if (response.status === 401) {
         console.error("Token appears to be expired or invalid");
 
+        const cookieStore = cookies();
+        // cookieStore.delete("spotify_access_token", {
+        //   path: "/",
+        //   sameSite: "lax",
+        // });
+
         return NextResponse.json(
           { message: "Authentication expired, please refresh the page" },
           { status: 401 }
@@ -123,8 +129,6 @@ async function fetchFormattedRecentTracks(accessToken: string) {
           artistNames: item.track?.artists?.map(
             (artist) => artist.name || "Unknown"
           ) || ["Unknown Artist"],
-          externalUrl: item.track?.external_urls?.spotify || "#",
-          imageUrl: item.track?.album?.images?.[0]?.url || "",
           playedAt: item.played_at || "Unknown Date",
         }))
       : [];

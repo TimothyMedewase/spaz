@@ -10,7 +10,6 @@ type TimePeriod = "4 weeks" | "6 months" | "12 months";
 interface ArtistData {
   name: string;
   artistImgUrl: string;
-  artistUrl: string;
 }
 
 const ArtistesPage = () => {
@@ -58,7 +57,6 @@ const ArtistesPage = () => {
   const formattedImages = artists.map((artist) => ({
     artisteUrl: artist.artistImgUrl,
     artisteName: artist.name,
-    externalUrl: artist.artistUrl, // Add the external URL from the API response
   }));
 
   return (

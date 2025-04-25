@@ -163,7 +163,6 @@ async function fetchTracksData(accessToken: string, timeRange: string) {
               (artist) => artist.name || "Unknown"
             ) || ["Unknown Artist"],
             trackImg: item.album?.images?.[0]?.url || null,
-            externalUrl: item.external_urls?.spotify || "#", // Adding external URL for Spotify
           }))
         : [];
 

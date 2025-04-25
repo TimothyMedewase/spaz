@@ -2,9 +2,15 @@
 
 import { Bar, BarChart, XAxis, YAxis, Cell } from "recharts";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
-import { type ChartConfig, ChartContainer } from "@/components/ui/chart";
+import {
+  type ChartConfig,
+  ChartContainer,
+  ChartTooltip,
+  ChartTooltipContent,
+} from "@/components/ui/chart";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { count } from "node:console";
 
 const timeRangeMap = {
   "4 weeks": "short_term",
@@ -124,7 +130,7 @@ export function Charts({ selectedPeriod }: ChartsProps) {
 
       setGenreData(processedData);
       setLoading(false);
-    } catch (err: unknown) {
+    } catch (err: any) {
       console.error("Error fetching genres:", err);
       setError(err instanceof Error ? err.message : String(err));
       setLoading(false);
@@ -184,12 +190,7 @@ export function Charts({ selectedPeriod }: ChartsProps) {
           </div>
         ) : (
           <ChartContainer config={chartConfig}>
-            <BarChart
-              barGap={5}
-              data={genreData}
-              layout="vertical"
-              barSize={20}
-            >
+            <BarChart data={genreData} layout="vertical" barSize={20}>
               <YAxis
                 dataKey="genre"
                 type="category"
@@ -201,10 +202,10 @@ export function Charts({ selectedPeriod }: ChartsProps) {
                 tickFormatter={formatGenre}
               />
               <XAxis dataKey="count" type="number" hide />
-              {/* <ChartTooltip
+              <ChartTooltip
                 cursor={false}
                 content={<ChartTooltipContent hideLabel />}
-              /> */}
+              />
               <Bar
                 barSize={40}
                 dataKey="count"

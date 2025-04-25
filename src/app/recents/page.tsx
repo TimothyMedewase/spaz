@@ -88,6 +88,12 @@ const Recents = () => {
     return () => clearInterval(intervalId);
   }, [router]);
 
+  // Function to manually refresh data
+  const handleRefresh = () => {
+    setLoading(true);
+    fetchTracks();
+  };
+
   return (
     <div>
       <Navbar />

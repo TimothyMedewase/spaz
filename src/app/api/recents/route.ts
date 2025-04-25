@@ -46,7 +46,7 @@ export async function GET() {
     }
 
     const data = await response.json();
-
+    console.log(data.items);
     return NextResponse.json(data.items);
     //return NextResponse.json(data.items[0].track.artists[0].name);
   } catch (error) {
