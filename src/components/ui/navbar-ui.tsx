@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -19,25 +19,51 @@ export const NavbarUI = ({
   className?: string;
 }) => {
   const pathname = usePathname();
+  // Add state to track if component is mounted (client-side only)
+  const [mounted, setMounted] = useState(false);
+
+  // Use effect to set mounted to true when component is mounted on client
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  // Only render the actual UI after component is mounted on client
+  // This prevents hydration mismatches
+  if (!mounted) {
+    return (
+      <div className="border-b relative flex items-center justify-between">
+        <Link
+          href="/"
+          className="mx-8 py-4 text-3xl font-extrabold text-[#1ED760]"
+        >
+          SPAZ
+        </Link>
+        <div className="flex justify-end space-x-4 mr-4">
+          <div className="w-6 h-6"></div>
+          <div className="w-10 h-10"></div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div>
-      <div className=" border-b relative flex items-center justify-between">
+      <div className="border-b relative flex items-center justify-between">
         <Link
           href="/"
-          className=" mx-8 py-4 text-3xl font-extrabold text-[#1ED760]"
+          className="mx-8 py-4 text-3xl font-extrabold text-[#1ED760]"
         >
           SPAZ
         </Link>
         <div
           className={cn(
-            " flex max-w-full relative mx-auto pr-8 pl-8 py-4 items-center justify-center space-x-8 ",
+            "flex max-w-full relative mx-auto pr-8 pl-8 py-4 items-center justify-center space-x-8",
             className
           )}
         >
-          {navItems.map((navItem: any, idx: number) => (
+          {navItems.map((navItem, idx: number) => (
             <Link
-              key={`link=${idx}`}
+              key={`link-${idx}`}
               href={navItem.link}
               className={clsx(
                 "relative font-semibold items-center text-neutral-600 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-neutral-50 transition-colors duration-200",
@@ -60,14 +86,7 @@ export const NavbarUI = ({
           <ModeToggle />
         </div>
         <div className="mr-2 size-auto flex">
-          <UserButton
-          // userProfileProps={{
-          //   additionalOAuthScopes: {
-          //     google: ["foo", "bar"],
-          //     github: ["qux"],
-          //   },
-          // }}
-          />
+          <UserButton />
         </div>
       </div>
     </div>

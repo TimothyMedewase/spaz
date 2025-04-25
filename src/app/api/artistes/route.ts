@@ -136,6 +136,7 @@ async function fetchArtistsData(accessToken: string, timeRange: string) {
       ? data.items.map((item) => ({
           name: item.name || "Unknown ArtistName",
           artistImgUrl: item.images[0].url || "Unknown Image",
+          artistUrl: item.external_urls.spotify || "Unknown URL",
         }))
       : [];
 
