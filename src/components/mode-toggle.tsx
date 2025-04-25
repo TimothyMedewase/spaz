@@ -14,6 +14,21 @@ import {
 
 export function ModeToggle() {
   const { setTheme } = useTheme();
+  const [mounted, setMounted] = React.useState(false);
+
+  // Only show the theme toggle after component has mounted to avoid hydration mismatch
+  React.useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) {
+    // Return a placeholder with the same dimensions to prevent layout shift
+    return (
+      <Button variant="outline" size="icon" className="opacity-0">
+        <Sun className="h-[1.2rem] w-[1.2rem]" />
+      </Button>
+    );
+  }
 
   return (
     <DropdownMenu>
