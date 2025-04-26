@@ -2,11 +2,13 @@
 
 import { ColumnDef } from "@tanstack/react-table";
 import Image from "next/image";
+import Link from "next/link";
 
 type TopTracks = {
   trackName: string;
   trackImg: string;
   artistNames: string[];
+  trackUrl: string;
 };
 
 export const columns: ColumnDef<TopTracks>[] = [
@@ -22,14 +24,25 @@ export const columns: ColumnDef<TopTracks>[] = [
     accessorKey: "trackImg",
     header: "",
     cell: ({ row }) => {
-      // Add 1 to the row index to start counting from 1 instead of 0
       return (
-        <Image
-          alt={row.original.trackName}
-          src={row.original.trackImg}
-          width={40}
-          height={40}
-        />
+        <Link
+          href={row.original.trackUrl}
+          target="_blank"
+          onClick={(e) => {
+            e.preventDefault();
+            if (confirm(`Open "${row.original.trackName}" in a new tab?`)) {
+              window.open(row.original.trackUrl, "_blank");
+            }
+          }}
+          className="cursor-pointer"
+        >
+          <Image
+            alt={row.original.trackName}
+            src={row.original.trackImg}
+            width={60}
+            height={40}
+          />
+        </Link>
       );
     },
   },
