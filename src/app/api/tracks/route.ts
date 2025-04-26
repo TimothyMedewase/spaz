@@ -159,6 +159,7 @@ async function fetchTracksData(accessToken: string, timeRange: string) {
       const formattedData = data?.items
         ? data.items.map((item) => ({
             trackName: item.name || "Unknown Track Name",
+            trackUrl: item.external_urls?.spotify || null,
             artistNames: item.artists?.map(
               (artist) => artist.name || "Unknown"
             ) || ["Unknown Artist"],
