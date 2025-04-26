@@ -25,10 +25,20 @@ export interface RecentsResponse {
   items: {
     track: {
       name: string;
+      album: {
+        images: {
+          0: {
+            url: string;
+          };
+        };
+      };
       artists: {
         id: string;
         name: string;
       }[];
+      external_urls: {
+        spotify: string;
+      };
     };
     played_at: string;
   }[];
@@ -56,11 +66,12 @@ export type TopArtistesResponse = {
     images: {
       0: {
         url: string;
-        // height: number;
-        // width: number;
       };
     };
     name: string;
+    external_urls: {
+      spotify: string;
+    };
   }[];
 };
 
