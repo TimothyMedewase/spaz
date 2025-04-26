@@ -1,33 +1,49 @@
 import React from "react";
 import Image from "next/image";
+import Link from "next/link";
 
-interface Image {
-  artisteUrl?: string;
+interface ImageItem {
+  artisteImgUrl?: string;
   artisteName?: string;
+  artisteUrl: string;
 }
 
 interface ImageGridProps {
-  images: Image[];
+  images: ImageItem[];
 }
 
 const ImageGrid: React.FC<ImageGridProps> = ({ images }) => {
   return (
     <div className="container mx-auto px-2">
-      <div className="gap-x-10 gap-y-16 justify-items-center grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 ">
+      <div className="gap-x-10 gap-y-16 justify-items-center grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3">
         {images.map((image, index) => (
-          <div key={index} className="aspect-w-16 aspect-h-9">
-            <Image
-              src={image.artisteUrl || "/placeholder.jpg"} // Default placeholder image if artisteUrl is not provided
-              alt={image.artisteName || `Image ${index + 1}`}
-              width={400}
-              height={320}
-              className="object-cover w-full h-full rounded-lg "
-            />
-            <div>
-              <h2 className="text-center text-lg font-semibold my-2 ">
-                {image.artisteName || `Image ${index + 1}`}
-              </h2>
-            </div>
+          <div key={index} className="flex flex-col items-center w-full">
+            <Link
+              href={image.artisteUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="block w-full"
+            >
+              <div className="relative w-full h-64 md:h-80">
+                <Image
+                  src={image.artisteImgUrl || "/placeholder-artist.jpg"}
+                  alt={image.artisteName || `Artist ${index + 1}`}
+                  fill
+                  sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, 33vw"
+                  style={{ objectFit: "cover" }}
+                  className="rounded-lg"
+                  onError={(e) => {
+                    const target = e.target as HTMLImageElement;
+                    target.src = "/placeholder-artist.jpg";
+                  }}
+                />
+              </div>
+              <div className="mt-3">
+                <h2 className="text-center text-lg font-semibold hover:underline">
+                  {image.artisteName || `Artist ${index + 1}`}
+                </h2>
+              </div>
+            </Link>
           </div>
         ))}
       </div>

@@ -10,6 +10,7 @@ type TimePeriod = "4 weeks" | "6 months" | "12 months";
 interface ArtistData {
   name: string;
   artistImgUrl: string;
+  artisteUrl: string;
 }
 
 const ArtistesPage = () => {
@@ -55,8 +56,9 @@ const ArtistesPage = () => {
 
   // Transform the API response data to match the ImageGrid component's expected format
   const formattedImages = artists.map((artist) => ({
-    artisteUrl: artist.artistImgUrl,
+    artisteImgUrl: artist.artistImgUrl,
     artisteName: artist.name,
+    artisteUrl: artist.artisteUrl,
   }));
 
   return (
