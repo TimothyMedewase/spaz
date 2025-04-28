@@ -202,10 +202,7 @@ export function Charts({ selectedPeriod }: ChartsProps) {
                 tickFormatter={formatGenre}
               />
               <XAxis dataKey="count" type="number" hide />
-              <ChartTooltip
-                cursor={false}
-                content={<ChartTooltipContent hideLabel />}
-              />
+
               <Bar
                 barSize={40}
                 dataKey="count"

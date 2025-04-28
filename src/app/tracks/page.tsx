@@ -70,11 +70,34 @@ const TracksPage = () => {
 
           // Special handling for 502 errors
           if (response.status === 502) {
-            throw new Error(
-              `Spotify server issue (502): ${
-                errorData?.message || "Error while loading resource"
-              }. This is a temporary issue with Spotify's servers.`
+            console.log(
+              "502 error detected, retrying with smaller limit of 20"
             );
+            // Retry with a smaller limit
+            const retryResponse = await fetch(
+              `/api/tracks?time_range=${timeRange}&limit=20`,
+              {
+                cache: "no-store",
+                headers: {
+                  "x-cache-bust": Date.now().toString(),
+                },
+              }
+            );
+
+            if (retryResponse.ok) {
+              const tracks = await retryResponse.json();
+              console.log("Successfully retrieved tracks with smaller limit");
+              setData(tracks);
+              setLoading(false);
+              return;
+            } else {
+              // If retry also fails, fall through to the regular error handling
+              throw new Error(
+                `Spotify server issue (502): ${
+                  errorData?.message || "Error while loading resource"
+                }. This is a temporary issue with Spotify's servers.`
+              );
+            }
           }
 
           throw new Error(

@@ -8,9 +8,10 @@ export const revalidate = 0;
 
 export async function GET(request: Request) {
   try {
-    // Extract time_range from URL query parameters
+    // Extract time_range and limit from URL query parameters
     const url = new URL(request.url);
     const timeRange = url.searchParams.get("time_range") || "medium_term";
+    const limit = url.searchParams.get("limit") || "50"; // Default to 50 if not specified
 
     // Validate time_range parameter
     if (!["short_term", "medium_term", "long_term"].includes(timeRange)) {
@@ -18,6 +19,18 @@ export async function GET(request: Request) {
         {
           message:
             "Invalid time_range parameter. Must be one of: short_term, medium_term, long_term",
+        },
+        { status: 400 }
+      );
+    }
+
+    // Validate limit parameter
+    const limitValue = parseInt(limit);
+    if (isNaN(limitValue) || limitValue < 1 || limitValue > 50) {
+      return NextResponse.json(
+        {
+          message:
+            "Invalid limit parameter. Must be a number between 1 and 50.",
         },
         { status: 400 }
       );
@@ -72,7 +85,11 @@ export async function GET(request: Request) {
         }
 
         // Use the newly fetched token for the next request
-        return await fetchTracksData(tokenData.accessToken, timeRange);
+        return await fetchTracksData(
+          tokenData.accessToken,
+          timeRange,
+          limitValue
+        );
       } catch (tokenError) {
         console.error("Failed to get token from API:", tokenError);
         return NextResponse.json(
@@ -83,9 +100,9 @@ export async function GET(request: Request) {
     }
 
     // If we have a token, use it directly
-    return await fetchTracksData(accessToken, timeRange);
+    return await fetchTracksData(accessToken, timeRange, limitValue);
   } catch (error) {
-    console.error("Unexpected error in artistes API:", error);
+    console.error("Unexpected error in tracks API:", error);
     return NextResponse.json(
       { message: "Server error while processing request" },
       { status: 500 }
@@ -93,7 +110,11 @@ export async function GET(request: Request) {
   }
 }
 
-async function fetchTracksData(accessToken: string, timeRange: string) {
+async function fetchTracksData(
+  accessToken: string,
+  timeRange: string,
+  limit: number
+) {
   // Maximum number of retry attempts for 502 errors
   const maxRetries = 3;
 
@@ -101,7 +122,7 @@ async function fetchTracksData(accessToken: string, timeRange: string) {
     try {
       const timestamp = Date.now();
       const response = await fetch(
-        `https://api.spotify.com/v1/me/top/tracks?time_range=${timeRange}&limit=50&timestamp=${timestamp}`,
+        `https://api.spotify.com/v1/me/top/tracks?time_range=${timeRange}&limit=${limit}&timestamp=${timestamp}`,
         {
           method: "GET",
           headers: {
