@@ -40,7 +40,7 @@ const ImageGrid: React.FC<ImageGridProps> = ({ images }) => {
               </div>
               <div className="mt-3">
                 <h2 className="text-center text-lg font-semibold hover:underline">
-                  {image.artisteName || `Artist ${index + 1}`}
+                  {index + 1}. {image.artisteName || `Artist ${index + 1}`}
                 </h2>
               </div>
             </Link>
