@@ -115,105 +115,67 @@ async function fetchTracksData(
   timeRange: string,
   limit: number
 ) {
-  // Maximum number of retry attempts for 502 errors
-  const maxRetries = 3;
+  try {
+    const timestamp = Date.now();
+    const response = await fetch(
+      `https://api.spotify.com/v1/me/top/tracks?time_range=${timeRange}&limit=${limit}&timestamp=${timestamp}`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          "Content-Type": "application/json",
+        },
+        cache: "no-store",
+      }
+    );
 
-  for (let attempt = 0; attempt < maxRetries; attempt++) {
-    try {
-      const timestamp = Date.now();
-      const response = await fetch(
-        `https://api.spotify.com/v1/me/top/tracks?time_range=${timeRange}&limit=${limit}&timestamp=${timestamp}`,
-        {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-            "Content-Type": "application/json",
-          },
-          cache: "no-store",
-        }
-      );
-
-      if (!response.ok) {
-        if (response.status === 401) {
-          console.error("Token appears to be expired or invalid");
-
-          return NextResponse.json(
-            { message: "Authentication expired, please refresh the page" },
-            { status: 401 }
-          );
-        }
-
-        const errorData = await response
-          .json()
-          .catch(() => ({ message: "Failed to parse Spotify error response" }));
-
-        console.error("Spotify API Error:", response.status, errorData);
-
-        // For 502 errors specifically, retry if we haven't hit the max retries yet
-        if (response.status === 502 && attempt < maxRetries - 1) {
-          console.log(
-            `Received 502 error for timeRange ${timeRange}, retry attempt ${
-              attempt + 1
-            }/${maxRetries}`
-          );
-
-          // Wait longer between each retry (exponential backoff)
-          const delayMs = 1000 * Math.pow(2, attempt);
-          await new Promise((resolve) => setTimeout(resolve, delayMs));
-          continue;
-        }
+    if (!response.ok) {
+      if (response.status === 401) {
+        console.error("Token appears to be expired or invalid");
 
         return NextResponse.json(
-          { message: "Error fetching data from Spotify", details: errorData },
-          { status: response.status }
+          { message: "Authentication expired, please refresh the page" },
+          { status: 401 }
         );
       }
 
-      const data: TopTracksResponse = await response.json();
-      // Use optional chaining for safer debugging
-      console.log(
-        "Received track data with",
-        data?.items?.length || 0,
-        "items"
-      );
+      const errorData = await response
+        .json()
+        .catch(() => ({ message: "Failed to parse Spotify error response" }));
 
-      const formattedData = data?.items
-        ? data.items.map((item) => ({
-            trackName: item.name || "Unknown Track Name",
-            trackUrl: item.external_urls?.spotify || null,
-            artistNames: item.artists?.map(
-              (artist) => artist.name || "Unknown"
-            ) || ["Unknown Artist"],
-            trackImg: item.album?.images?.[0]?.url || null,
-          }))
-        : [];
+      console.error("Spotify API Error:", response.status, errorData);
 
-      const formattedResponse = NextResponse.json(formattedData);
-
-      formattedResponse.headers.set("Cache-Control", "no-store, max-age=0");
-
-      return formattedResponse;
-    } catch (error) {
-      // If we still have retries left for unexpected errors, try again
-      if (attempt < maxRetries - 1) {
-        console.log(
-          `Unexpected error fetching tracks, retry attempt ${
-            attempt + 1
-          }/${maxRetries}`
-        );
-        const delayMs = 1000 * Math.pow(2, attempt);
-        await new Promise((resolve) => setTimeout(resolve, delayMs));
-        continue;
-      }
-
-      console.error(
-        "Error fetching tracks from Spotify after all retries:",
-        error
-      );
       return NextResponse.json(
-        { message: "Failed to fetch tracks due to server error" },
-        { status: 500 }
+        { message: "Error fetching data from Spotify", details: errorData },
+        { status: response.status }
       );
     }
+
+    const data: TopTracksResponse = await response.json();
+    // Use optional chaining for safer debugging
+    console.log("Received track data with", data?.items?.length || 0, "items");
+
+    const formattedData = data?.items
+      ? data.items.map((item) => ({
+          trackName: item.name || "Unknown Track Name",
+          trackUrl: item.external_urls?.spotify || null,
+          artistNames: item.artists?.map(
+            (artist) => artist.name || "Unknown"
+          ) || ["Unknown Artist"],
+          trackImg: item.album?.images?.[0]?.url || null,
+        }))
+      : [];
+
+    const formattedResponse = NextResponse.json(formattedData);
+
+    formattedResponse.headers.set("Cache-Control", "no-store, max-age=0");
+
+    return formattedResponse;
+  } catch (error) {
+    console.error("Error fetching tracks from Spotify:", error);
+    return NextResponse.json(
+      { message: "Failed to fetch tracks due to server error" },
+      { status: 500 }
+    );
   }
 }
