@@ -1,6 +1,6 @@
 "use client";
 import { Navbar } from "@/components/Navbar";
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { Filter } from "@/components/ui/filter";
 import { Charts } from "@/components/genres/Charts";
 import Footer from "@/components/Footer";
@@ -8,6 +8,7 @@ import Footer from "@/components/Footer";
 type TimePeriod = "4 weeks" | "6 months" | "12 months";
 
 interface GenreData {
+  [key: string]: any;
   genre: string;
   count: number;
   fill?: string;
@@ -17,9 +18,9 @@ const GenresPage = () => {
   const [selectedPeriod, setSelectedPeriod] = useState<TimePeriod>("4 weeks");
   const [genreData, setGenreData] = useState<GenreData[]>([]);
 
-  const handleDataUpdate = (data: GenreData[]) => {
+  const handleDataUpdate = useCallback((data: GenreData[]) => {
     setGenreData(data);
-  };
+  }, []);
 
   return (
     <div>

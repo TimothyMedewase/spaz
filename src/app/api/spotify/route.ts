@@ -14,7 +14,7 @@ export async function GET() {
     }
 
     // Get the OAuth access token for the user
-    const provider = "oauth_spotify";
+    const provider = "spotify";
 
     try {
       const client = await clerkClient();

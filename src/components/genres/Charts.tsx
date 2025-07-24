@@ -1,9 +1,14 @@
 "use client";
 
 import { Bar, BarChart, XAxis, YAxis, Cell } from "recharts";
-import { Card, CardContent, CardFooter } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+} from "@/components/ui/card";
 import { type ChartConfig, ChartContainer } from "@/components/ui/chart";
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { RollingLoader } from "@/components/ui/rolling-loader";
 
@@ -61,6 +66,7 @@ export function Charts({ selectedPeriod, onDataUpdate }: ChartsProps) {
   const [error, setError] = useState<string | null>(null);
   const [isRetrying, setIsRetrying] = useState(false);
   const router = useRouter();
+  const prevSelectedPeriod = useRef<string>(selectedPeriod);
 
   const fetchGenres = useCallback(
     async (retry = false) => {
@@ -142,8 +148,11 @@ export function Charts({ selectedPeriod, onDataUpdate }: ChartsProps) {
   );
 
   useEffect(() => {
-    fetchGenres();
-  }, [fetchGenres]);
+    if (prevSelectedPeriod.current !== selectedPeriod) {
+      fetchGenres();
+      prevSelectedPeriod.current = selectedPeriod;
+    }
+  }, [selectedPeriod, fetchGenres]);
 
   // Format the genre name for display
   const formatGenre = (genre: string) => {
@@ -193,6 +202,7 @@ export function Charts({ selectedPeriod, onDataUpdate }: ChartsProps) {
             <BarChart
               data={genreData}
               layout="vertical"
+              margin={{ left: 20, top: 20 }}
               barSize={20}
               barCategoryGap="20%"
             >

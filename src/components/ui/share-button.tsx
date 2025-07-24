@@ -2,13 +2,13 @@ import React, { useRef, useState } from "react";
 import { Button } from "./button";
 import {
   FaShare,
-  FaTwitter,
+  FaXTwitter,
   FaInstagram,
   FaFacebook,
   FaWhatsapp,
   FaDownload,
-  FaTimes,
-} from "react-icons/fa";
+  FaXmark,
+} from "react-icons/fa6";
 import { Tooltip } from "./tooltip";
 
 interface ShareableItem {
@@ -320,7 +320,7 @@ export const ShareButton: React.FC<ShareButtonProps> = ({
               disabled={isGenerating}
               className="w-full px-4 py-3 text-left hover:bg-gray-50 dark:hover:bg-gray-700 flex items-center space-x-3 transition-colors disabled:opacity-50"
             >
-              <FaTwitter className="h-4 w-4 text-[#1DA1F2]" />
+              <FaXTwitter className="h-4 w-4 text-[#1DA1F2]" />
               <span className="text-sm text-gray-900 dark:text-gray-100">
                 Twitter
               </span>
@@ -377,7 +377,7 @@ export const ShareButton: React.FC<ShareButtonProps> = ({
                 onClick={() => setShowDropdown(false)}
                 className="w-full px-4 py-3 text-left hover:bg-gray-50 dark:hover:bg-gray-700 flex items-center space-x-3 transition-colors"
               >
-                <FaTimes className="h-4 w-4 text-gray-400" />
+                <FaXmark className="h-4 w-4 text-gray-400" />
                 <span className="text-sm text-gray-500 dark:text-gray-400">
                   Cancel
                 </span>
