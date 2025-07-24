@@ -2,15 +2,10 @@
 
 import { Bar, BarChart, XAxis, YAxis, Cell } from "recharts";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
-import {
-  type ChartConfig,
-  ChartContainer,
-  ChartTooltip,
-  ChartTooltipContent,
-} from "@/components/ui/chart";
-import { useState, useEffect } from "react";
+import { type ChartConfig, ChartContainer } from "@/components/ui/chart";
+import { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
-import { count } from "node:console";
+import { RollingLoader } from "@/components/ui/rolling-loader";
 
 const timeRangeMap = {
   "4 weeks": "short_term",
@@ -50,6 +45,7 @@ interface GenreData {
 
 interface ChartsProps {
   selectedPeriod: string;
+  onDataUpdate?: (data: GenreData[]) => void;
 }
 
 // Create chart config matching the example style
@@ -59,87 +55,95 @@ const chartConfig: ChartConfig = {
   },
 } as const;
 
-export function Charts({ selectedPeriod }: ChartsProps) {
+export function Charts({ selectedPeriod, onDataUpdate }: ChartsProps) {
   const [genreData, setGenreData] = useState<GenreData[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [isRetrying, setIsRetrying] = useState(false);
   const router = useRouter();
 
-  const fetchGenres = async (retry = false) => {
-    try {
-      if (!retry) {
-        setLoading(true);
-      }
-      setError(null);
-
-      // Get the corresponding Spotify time range value
-      const timeRange =
-        timeRangeMap[selectedPeriod as keyof typeof timeRangeMap];
-
-      console.log(`Fetching genres with time range: ${timeRange}`);
-
-      const response = await fetch(`/api/genres?time_range=${timeRange}`, {
-        cache: "no-store",
-        headers: {
-          "x-cache-bust": Date.now().toString(),
-        },
-      });
-
-      if (!response.ok) {
-        if (response.status === 401) {
-          console.log("Unauthorized, redirecting to sign-in");
-          router.push("/sign-in");
-          return;
+  const fetchGenres = useCallback(
+    async (retry = false) => {
+      try {
+        if (!retry) {
+          setLoading(true);
         }
+        setError(null);
 
-        // Handle other errors
-        let errorDetails = "Unknown error";
-        let errorData;
+        // Get the corresponding Spotify time range value
+        const timeRange =
+          timeRangeMap[selectedPeriod as keyof typeof timeRangeMap];
 
-        try {
-          errorData = await response.json();
-          errorDetails = JSON.stringify(errorData);
-          console.error("Error response:", errorData);
-        } catch (parseErr) {
-          console.error("Could not parse error response:", parseErr);
-        }
+        console.log(`Fetching genres with time range: ${timeRange}`);
 
-        // Special handling for 502 errors
-        if (response.status === 502) {
+        const response = await fetch(`/api/genres?time_range=${timeRange}`, {
+          cache: "no-store",
+          headers: {
+            "x-cache-bust": Date.now().toString(),
+          },
+        });
+
+        if (!response.ok) {
+          if (response.status === 401) {
+            console.log("Unauthorized, redirecting to sign-in");
+            router.push("/sign-in");
+            return;
+          }
+
+          // Handle other errors
+          let errorDetails = "Unknown error";
+          let errorData;
+
+          try {
+            errorData = await response.json();
+            errorDetails = JSON.stringify(errorData);
+            console.error("Error response:", errorData);
+          } catch (parseErr) {
+            console.error("Could not parse error response:", parseErr);
+          }
+
+          // Special handling for 502 errors
+          if (response.status === 502) {
+            throw new Error(
+              `Spotify server issue (502): ${
+                errorData?.message || "Error while loading resource"
+              }. This is a temporary issue with Spotify's servers.`
+            );
+          }
+
           throw new Error(
-            `Spotify server issue (502): ${
-              errorData?.message || "Error while loading resource"
-            }. This is a temporary issue with Spotify's servers.`
+            `API request failed with status ${response.status}: ${errorDetails}`
           );
         }
 
-        throw new Error(
-          `API request failed with status ${response.status}: ${errorDetails}`
-        );
+        const data = await response.json();
+        console.log("Received genres data:", data);
+
+        // Add fill property to each genre data item
+        const processedData = data.map((item: GenreData, index: number) => ({
+          ...item,
+          fill: COLORS[index % COLORS.length],
+        }));
+
+        setGenreData(processedData);
+        setLoading(false);
+
+        // Notify parent component about data update
+        if (onDataUpdate) {
+          onDataUpdate(processedData);
+        }
+      } catch (err: unknown) {
+        console.error("Error fetching genres:", err);
+        setError(err instanceof Error ? err.message : String(err));
+        setLoading(false);
       }
-
-      const data = await response.json();
-      console.log("Received genres data:", data);
-
-      // Add fill property to each genre data item
-      const processedData = data.map((item: GenreData, index: number) => ({
-        ...item,
-        fill: COLORS[index % COLORS.length],
-      }));
-
-      setGenreData(processedData);
-      setLoading(false);
-    } catch (err: any) {
-      console.error("Error fetching genres:", err);
-      setError(err instanceof Error ? err.message : String(err));
-      setLoading(false);
-    }
-  };
+    },
+    [selectedPeriod, router, onDataUpdate]
+  );
 
   useEffect(() => {
     fetchGenres();
-  }, [selectedPeriod, router]);
+  }, [fetchGenres]);
 
   // Format the genre name for display
   const formatGenre = (genre: string) => {
@@ -153,11 +157,7 @@ export function Charts({ selectedPeriod }: ChartsProps) {
     <Card className="mb-8">
       <CardContent>
         {loading ? (
-          <div className="flex items-center justify-center h-72">
-            <p className="text-lg text-muted-foreground">
-              Loading genres data...
-            </p>
-          </div>
+          <RollingLoader />
         ) : error ? (
           <div className="p-6 border border-red-300 rounded bg-red-50 text-red-800">
             <h2 className="text-xl font-semibold mb-2">Error loading genres</h2>
@@ -190,7 +190,12 @@ export function Charts({ selectedPeriod }: ChartsProps) {
           </div>
         ) : (
           <ChartContainer config={chartConfig}>
-            <BarChart data={genreData} layout="vertical" barSize={20}>
+            <BarChart
+              data={genreData}
+              layout="vertical"
+              barSize={20}
+              barCategoryGap="20%"
+            >
               <YAxis
                 dataKey="genre"
                 type="category"
@@ -204,7 +209,7 @@ export function Charts({ selectedPeriod }: ChartsProps) {
               <XAxis dataKey="count" type="number" hide />
 
               <Bar
-                barSize={40}
+                barSize={30}
                 dataKey="count"
                 name="Count"
                 layout="vertical"

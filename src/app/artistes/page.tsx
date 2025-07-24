@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { Filter } from "@/components/ui/filter";
 import Footer from "@/components/Footer";
 import ImageGrid from "../../components/artistes/ImageGrid";
+import { RollingLoader } from "@/components/ui/rolling-loader";
 
 type TimePeriod = "4 weeks" | "6 months" | "12 months";
 
@@ -71,10 +72,12 @@ const ArtistesPage = () => {
         <Filter
           selectedPeriod={selectedPeriod}
           onPeriodChange={setSelectedPeriod}
+          shareData={artists}
+          shareType="artists"
         />
         <div className="container mx-auto py-10">
           {loading ? (
-            <div className="text-center py-10">Loading artists...</div>
+            <RollingLoader />
           ) : error ? (
             <div className="text-center py-10 text-red-500">{error}</div>
           ) : artists.length === 0 ? (

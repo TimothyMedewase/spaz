@@ -7,6 +7,7 @@ import Footer from "@/components/Footer";
 import { DataTable } from "@/components/data-table";
 import { columns } from "./columns";
 import { useRouter } from "next/navigation";
+import { RollingLoader } from "@/components/ui/rolling-loader";
 
 type TimePeriod = "4 weeks" | "6 months" | "12 months";
 
@@ -148,10 +149,12 @@ const TracksPage = () => {
         <Filter
           selectedPeriod={selectedPeriod}
           onPeriodChange={setSelectedPeriod}
+          shareData={data}
+          shareType="tracks"
         />
         <div className="container mx-auto py-10">
           {loading ? (
-            <div className="text-center py-10">Loading top tracks...</div>
+            <RollingLoader />
           ) : error ? (
             <div className="p-6 border border-red-300 rounded bg-red-50 text-red-800">
               <h2 className="text-xl font-semibold mb-2">

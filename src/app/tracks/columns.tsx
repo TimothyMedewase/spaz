@@ -3,6 +3,7 @@
 import { ColumnDef } from "@tanstack/react-table";
 import Image from "next/image";
 import Link from "next/link";
+import { FaPlay } from "react-icons/fa";
 
 type TopTracks = {
   trackName: string;
@@ -30,18 +31,22 @@ export const columns: ColumnDef<TopTracks>[] = [
           target="_blank"
           onClick={(e) => {
             e.preventDefault();
-            if (confirm(`Open "${row.original.trackName}" in a new tab?`)) {
+            if (confirm(`Open "${row.original.trackName}" on Spotify?`)) {
               window.open(row.original.trackUrl, "_blank");
             }
           }}
-          className="cursor-pointer"
+          className="cursor-pointer relative inline-block group"
         >
           <Image
             alt={row.original.trackName}
             src={row.original.trackImg}
             width={60}
             height={40}
+            className="rounded"
           />
+          <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-0 group-hover:bg-opacity-50 transition-all duration-200 rounded">
+            <FaPlay className="text-white text-sm opacity-0 group-hover:opacity-100 transition-opacity duration-200" />
+          </div>
         </Link>
       );
     },

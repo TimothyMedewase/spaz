@@ -7,8 +7,19 @@ import Footer from "@/components/Footer";
 
 type TimePeriod = "4 weeks" | "6 months" | "12 months";
 
+interface GenreData {
+  genre: string;
+  count: number;
+  fill?: string;
+}
+
 const GenresPage = () => {
   const [selectedPeriod, setSelectedPeriod] = useState<TimePeriod>("4 weeks");
+  const [genreData, setGenreData] = useState<GenreData[]>([]);
+
+  const handleDataUpdate = (data: GenreData[]) => {
+    setGenreData(data);
+  };
 
   return (
     <div>
@@ -20,9 +31,14 @@ const GenresPage = () => {
         <Filter
           selectedPeriod={selectedPeriod}
           onPeriodChange={setSelectedPeriod}
+          shareData={genreData}
+          shareType="genres"
         />
         <div className="mt-12 mb-5 ">
-          <Charts selectedPeriod={selectedPeriod} />
+          <Charts
+            selectedPeriod={selectedPeriod}
+            onDataUpdate={handleDataUpdate}
+          />
         </div>
       </div>
       <Footer />
