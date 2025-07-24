@@ -6,6 +6,7 @@ import { columns } from "./columns";
 import Footer from "@/components/Footer";
 import { DataTable } from "@/components/data-table";
 import { useRouter } from "next/navigation";
+import { RollingLoader } from "@/components/ui/rolling-loader";
 
 // Polling interval in milliseconds (e.g., 30 seconds)
 const POLLING_INTERVAL = 30000;
@@ -103,7 +104,7 @@ const Recents = () => {
         </div>
         <div className="container mx-auto py-10">
           {loading ? (
-            <div className="text-center py-10">Loading recent tracks...</div>
+            <RollingLoader />
           ) : error ? (
             <div className="p-6 border border-red-300 rounded bg-red-50 text-red-800">
               <h2 className="text-xl font-semibold mb-2">

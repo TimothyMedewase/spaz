@@ -176,7 +176,7 @@ async function fetchGenresData(accessToken: string, timeRange: string) {
         .sort((a, b) => b.count - a.count);
 
       // Limit to top 20 genres for visualization purposes
-      const topGenres = sortedGenres.slice(0, 10);
+      const topGenres = sortedGenres.slice(0, 15);
 
       const formattedResponse = NextResponse.json(topGenres);
       formattedResponse.headers.set("Cache-Control", "no-store, max-age=0");

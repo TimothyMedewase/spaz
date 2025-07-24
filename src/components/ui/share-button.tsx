@@ -1,0 +1,402 @@
+import React, { useRef, useState } from "react";
+import { Button } from "./button";
+import {
+  FaShare,
+  FaTwitter,
+  FaInstagram,
+  FaFacebook,
+  FaWhatsapp,
+  FaDownload,
+  FaTimes,
+} from "react-icons/fa";
+import { Tooltip } from "./tooltip";
+
+interface ShareableItem {
+  trackName?: string;
+  artistNames?: string[];
+  name?: string;
+  artisteName?: string;
+  genre?: string;
+  [key: string]: unknown;
+}
+
+interface ShareButtonProps {
+  data: ShareableItem[];
+  type: "tracks" | "artists" | "genres";
+  period: string;
+  onShare?: () => void;
+}
+
+export const ShareButton: React.FC<ShareButtonProps> = ({
+  data,
+  type,
+  period,
+  onShare,
+}) => {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const [showDropdown, setShowDropdown] = useState(false);
+  const [isGenerating, setIsGenerating] = useState(false);
+
+  const generateAnalyticsImage = async (): Promise<string> => {
+    const canvas = canvasRef.current;
+    if (!canvas) throw new Error("Canvas not available");
+
+    const ctx = canvas.getContext("2d");
+    if (!ctx) throw new Error("Canvas context not available");
+
+    // Set canvas size (analytics proportions)
+    canvas.width = 400;
+    canvas.height = 600;
+
+    // Analytics background
+    ctx.fillStyle = "#ffffff";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    // Add some texture/grain to make it look like paper
+    ctx.fillStyle = "#f8f8f8";
+    for (let i = 0; i < 100; i++) {
+      ctx.fillRect(
+        Math.random() * canvas.width,
+        Math.random() * canvas.height,
+        1,
+        1
+      );
+    }
+
+    // Set text properties
+    ctx.fillStyle = "#000000";
+    ctx.textAlign = "center";
+
+    let y = 40;
+    const lineHeight = 25;
+    const top10 = data.slice(0, 10);
+
+    // Header
+    ctx.font = "bold 20px monospace";
+    ctx.fillText("SPAZ ANALYTICS", canvas.width / 2, y);
+    y += lineHeight;
+
+    ctx.font = "16px monospace";
+    ctx.fillText("Your Spotify Analytics", canvas.width / 2, y);
+    y += lineHeight;
+
+    // Separator line
+    ctx.font = "12px monospace";
+    ctx.fillText("━".repeat(35), canvas.width / 2, y);
+    y += lineHeight + 10;
+
+    // Title
+    ctx.font = "bold 16px monospace";
+    const title = `MY TOP 10 ${type.toUpperCase()}`;
+    ctx.fillText(title, canvas.width / 2, y);
+    y += lineHeight;
+
+    ctx.font = "14px monospace";
+    ctx.fillText(`Last ${period}`, canvas.width / 2, y);
+    y += lineHeight + 10;
+
+    // Items
+    ctx.font = "12px monospace";
+    ctx.textAlign = "left";
+
+    top10.forEach((item, index) => {
+      let itemName = "";
+
+      if (type === "tracks") {
+        itemName = item.trackName || "";
+        if (item.artistNames && item.artistNames.length > 0) {
+          const artists = item.artistNames.join(", ");
+          // Truncate if too long
+          const fullText = `${itemName} - ${artists}`;
+          itemName =
+            fullText.length > 35 ? fullText.substring(0, 32) + "..." : fullText;
+        }
+      } else if (type === "artists") {
+        itemName = item.name || item.artisteName || "";
+      } else if (type === "genres") {
+        itemName = item.genre || "";
+      }
+
+      // Truncate item name if too long
+      if (itemName.length > 35) {
+        itemName = itemName.substring(0, 32) + "...";
+      }
+
+      const rank = String(index + 1).padStart(2, "0");
+      ctx.fillText(`${rank}. ${itemName}`, 30, y);
+      y += lineHeight;
+    });
+
+    y += 20;
+
+    // Separator line
+    ctx.textAlign = "center";
+    ctx.fillText("━".repeat(35), canvas.width / 2, y);
+    y += lineHeight + 10;
+
+    // Footer
+    ctx.font = "bold 14px monospace";
+    ctx.fillText("Thank you for using SPAZ!", canvas.width / 2, y);
+    y += lineHeight;
+
+    ctx.font = "12px monospace";
+    ctx.fillText("Visit spaz-music.com", canvas.width / 2, y);
+    y += lineHeight;
+
+    ctx.fillText("for more insights", canvas.width / 2, y);
+
+    return canvas.toDataURL("image/png");
+  };
+
+  const generateShareList = (): string => {
+    const top10 = data.slice(0, 10);
+    let list = "";
+    top10.forEach((item, index) => {
+      let itemName = "";
+      if (type === "tracks") {
+        itemName = item.trackName || "";
+        if (item.artistNames && item.artistNames.length > 0) {
+          itemName += ` - ${item.artistNames.join(", ")}`;
+        }
+      } else if (type === "artists") {
+        itemName = item.name || item.artisteName || "";
+      } else if (type === "genres") {
+        itemName = item.genre || "";
+      }
+      list += `${index + 1}. ${itemName}\n`;
+    });
+    return list;
+  };
+
+  const handleShare = async () => {
+    setShowDropdown(!showDropdown);
+  };
+
+  const shareToTwitter = async () => {
+    try {
+      setIsGenerating(true);
+      const list = generateShareList();
+      const shareText = `My Top 10 ${
+        type.charAt(0).toUpperCase() + type.slice(1)
+      } for the last ${period}:\n\n${list}\nGenerated by SPAZ 🎵 #SpotifyAnalytics\nhttps://spaz-music.com`;
+
+      const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(
+        shareText
+      )}`;
+      window.open(twitterUrl, "_blank");
+
+      setShowDropdown(false);
+      if (onShare) onShare();
+    } catch (error) {
+      console.error("Error sharing to Twitter:", error);
+      alert("Sorry, there was an error. Please try again.");
+    } finally {
+      setIsGenerating(false);
+    }
+  };
+
+  const shareToFacebook = async () => {
+    try {
+      setIsGenerating(true);
+      const list = generateShareList();
+      const shareText = `My Top 10 ${
+        type.charAt(0).toUpperCase() + type.slice(1)
+      } for the last ${period}:\n\n${list}\nGenerated by SPAZ 🎵\nhttps://spaz-music.com`;
+
+      const shareUrl = "https://spaz-music.com";
+      const facebookUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(
+        shareUrl
+      )}&quote=${encodeURIComponent(shareText)}`;
+      window.open(facebookUrl, "_blank");
+
+      setShowDropdown(false);
+      if (onShare) onShare();
+    } catch (error) {
+      console.error("Error sharing to Facebook:", error);
+      alert("Sorry, there was an error. Please try again.");
+    } finally {
+      setIsGenerating(false);
+    }
+  };
+
+  const shareToWhatsApp = async () => {
+    try {
+      setIsGenerating(true);
+      const list = generateShareList();
+      const shareText = `My Top 10 ${
+        type.charAt(0).toUpperCase() + type.slice(1)
+      } for the last ${period}:\n\n${list}\nGenerated by SPAZ 🎵\nhttps://spaz-music.com`;
+
+      const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(
+        shareText
+      )}`;
+      window.open(whatsappUrl, "_blank");
+
+      setShowDropdown(false);
+      if (onShare) onShare();
+    } catch (error) {
+      console.error("Error sharing to WhatsApp:", error);
+      alert("Sorry, there was an error. Please try again.");
+    } finally {
+      setIsGenerating(false);
+    }
+  };
+
+  const shareToInstagram = async () => {
+    try {
+      setIsGenerating(true);
+      const list = generateShareList();
+      const shareText = `My Top 10 ${
+        type.charAt(0).toUpperCase() + type.slice(1)
+      } for the last ${period}:\n\n${list}\nGenerated by SPAZ 🎵\n#Spotify #Music #Analytics #SPAZ\nhttps://spaz-music.com`;
+
+      await navigator.clipboard.writeText(shareText);
+      alert("List copied to clipboard! Paste it in your Instagram post.");
+
+      setShowDropdown(false);
+      if (onShare) onShare();
+    } catch (error) {
+      console.error("Error sharing to Instagram:", error);
+      alert("Sorry, there was an error. Please try again.");
+    } finally {
+      setIsGenerating(false);
+    }
+  };
+
+  const downloadAnalytics = async () => {
+    try {
+      setIsGenerating(true);
+      const imageDataUrl = await generateAnalyticsImage();
+
+      const fileName = `spaz-${type}-${period.replace(" ", "-")}.png`;
+
+      const link = document.createElement("a");
+      link.download = fileName;
+      link.href = imageDataUrl;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+
+      setShowDropdown(false);
+
+      if (onShare) {
+        onShare();
+      }
+    } catch (error) {
+      console.error("Error downloading analytics:", error);
+      alert("Sorry, there was an error. Please try again.");
+    } finally {
+      setIsGenerating(false);
+    }
+  };
+
+  if (!data || data.length === 0) {
+    return null;
+  }
+
+  return (
+    <div className="relative">
+      <Tooltip content="Share your top 10" position="top">
+        <Button
+          onClick={handleShare}
+          size="sm"
+          className="w-8 h-8 rounded-full bg-[#1ED760] hover:bg-[#1DB954] text-white border-0 shadow-lg hover:shadow-xl transition-all duration-200 hover:scale-105 flex items-center justify-center p-0"
+        >
+          <FaShare className="h-5 w-5" />
+          <span className="sr-only">Share Analytics</span>
+        </Button>
+      </Tooltip>
+
+      {/* Social Media Dropdown */}
+      {showDropdown && (
+        <div className="absolute top-14 right-0 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg z-50 w-48">
+          <div className="py-2">
+            <div className="px-4 py-2 text-sm font-semibold text-gray-700 dark:text-gray-200 border-b border-gray-100 dark:border-gray-700">
+              Share to
+            </div>
+
+            <button
+              onClick={shareToTwitter}
+              disabled={isGenerating}
+              className="w-full px-4 py-3 text-left hover:bg-gray-50 dark:hover:bg-gray-700 flex items-center space-x-3 transition-colors disabled:opacity-50"
+            >
+              <FaTwitter className="h-4 w-4 text-[#1DA1F2]" />
+              <span className="text-sm text-gray-900 dark:text-gray-100">
+                Twitter
+              </span>
+            </button>
+
+            <button
+              onClick={shareToFacebook}
+              disabled={isGenerating}
+              className="w-full px-4 py-3 text-left hover:bg-gray-50 dark:hover:bg-gray-700 flex items-center space-x-3 transition-colors disabled:opacity-50"
+            >
+              <FaFacebook className="h-4 w-4 text-[#4267B2]" />
+              <span className="text-sm text-gray-900 dark:text-gray-100">
+                Facebook
+              </span>
+            </button>
+
+            <button
+              onClick={shareToInstagram}
+              disabled={isGenerating}
+              className="w-full px-4 py-3 text-left hover:bg-gray-50 dark:hover:bg-gray-700 flex items-center space-x-3 transition-colors disabled:opacity-50"
+            >
+              <FaInstagram className="h-4 w-4 text-[#E4405F]" />
+              <span className="text-sm text-gray-900 dark:text-gray-100">
+                Instagram
+              </span>
+            </button>
+
+            <button
+              onClick={shareToWhatsApp}
+              disabled={isGenerating}
+              className="w-full px-4 py-3 text-left hover:bg-gray-50 dark:hover:bg-gray-700 flex items-center space-x-3 transition-colors disabled:opacity-50"
+            >
+              <FaWhatsapp className="h-4 w-4 text-[#25D366]" />
+              <span className="text-sm text-gray-900 dark:text-gray-100">
+                WhatsApp
+              </span>
+            </button>
+
+            <div className="border-t border-gray-100 dark:border-gray-700 mt-1">
+              <button
+                onClick={downloadAnalytics}
+                disabled={isGenerating}
+                className="w-full px-4 py-3 text-left hover:bg-gray-50 dark:hover:bg-gray-700 flex items-center space-x-3 transition-colors disabled:opacity-50"
+              >
+                <FaDownload className="h-4 w-4 text-gray-600 dark:text-gray-400" />
+                <span className="text-sm text-gray-900 dark:text-gray-100">
+                  Download
+                </span>
+              </button>
+            </div>
+
+            <div className="border-t border-gray-100 dark:border-gray-700 mt-1">
+              <button
+                onClick={() => setShowDropdown(false)}
+                className="w-full px-4 py-3 text-left hover:bg-gray-50 dark:hover:bg-gray-700 flex items-center space-x-3 transition-colors"
+              >
+                <FaTimes className="h-4 w-4 text-gray-400" />
+                <span className="text-sm text-gray-500 dark:text-gray-400">
+                  Cancel
+                </span>
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Click outside to close dropdown */}
+      {showDropdown && (
+        <div
+          className="fixed inset-0 z-40"
+          onClick={() => setShowDropdown(false)}
+        />
+      )}
+
+      {/* Hidden canvas for image generation */}
+      <canvas ref={canvasRef} style={{ display: "none" }} aria-hidden="true" />
+    </div>
+  );
+};

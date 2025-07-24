@@ -3,10 +3,10 @@ import { FaXTwitter, FaLinkedinIn, FaGithub } from "react-icons/fa6";
 
 export default function Footer() {
   return (
-    <footer className="bg-[#1ED760] text-gray-50  mx-auto">
-      <div className=" max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-          <div className="md:col-span-2 lg:col-span-1">
+    <footer className="bg-[#1ED760] text-gray-50 mx-auto mt-2">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-8 text-center md:text-left">
+          <div className="md:col-span-2">
             <h3 className="text-lg font-semibold mb-4">About Us</h3>
             <p className="text-sm">
               An application that provides users insights into their Spotify
@@ -71,24 +71,15 @@ export default function Footer() {
               </li>
             </ul>
           </div>
-          <div>
-            <h3 className="text-lg font-semibold mb-4">Contact Us</h3>
-            <address className="text-sm not-italic">
-              <p>123 Main Street</p>
-              <p>Anytown, USA 12345</p>
-              <p>Email: info@example.com</p>
-              <p>Phone: (123) 456-7890</p>
-            </address>
-          </div>
         </div>
         <div className="mt-8 pt-8 border-t border-gray-700">
-          <div className="flex justify-between items-center">
-            <p className="text-sm">
+          <div className="flex flex-col md:flex-row justify-between items-center">
+            <p className="text-sm text-center md:text-left mb-4 md:mb-0">
               &copy; {new Date().getFullYear()} SPAZ. All rights reserved.
             </p>
             <div className="flex space-x-4">
               <Link
-                href="https://x.com/timothymedewase"
+                href="https://x.com/medewaset"
                 className="text-gray-400 hover:text-gray-600 transition-colors"
                 target="_blank"
               >
