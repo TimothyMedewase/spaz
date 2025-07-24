@@ -17,13 +17,13 @@ export async function GET() {
     const provider = "oauth_spotify";
 
     try {
-      const client = clerkClient;
-      const clerkResponse = await client.users.getOauthAccessToken(
+      const client = await clerkClient();
+      const clerkResponse = await client.users.getUserOauthAccessToken(
         userId,
         provider
       );
 
-      const accessToken = clerkResponse[0]?.token || "";
+      const accessToken = clerkResponse.data[0]?.token || "";
 
       if (!accessToken) {
         console.error("No Spotify access token found for user");

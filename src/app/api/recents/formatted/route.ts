@@ -34,9 +34,7 @@ export async function GET() {
       try {
         const tokenResponse = await fetch(`${baseUrl}/api/spotify`, {
           method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
+          headers: request.headers,
           cache: "no-store",
         });
 
